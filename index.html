@@ -1,63 +1,26 @@
-<!-- The top of file index.html -->
-<html itemscope itemtype="http://schema.org/Article">
-
-<head>
-    <!-- BEGIN Pre-requisites -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer>
-    </script>
-    <!-- END Pre-requisites -->
+<html lang="en">
+  <head>
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="1064919328221-7ce00cmar1o5e0bcqccq9seeftl11bma.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+  </head>
+  <body>
+    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
     <script>
-        function start() {
-            gapi.load('auth2', function () {
-                auth2 = gapi.auth2.init({
-                    client_id: '1064919328221-7ce00cmar1o5e0bcqccq9seeftl11bma.apps.googleusercontent.com',
-                    // Scopes to request in addition to 'profile' and 'email'
-                    //scope: 'additional_scope'
-                });
-            });
-        }
+      function onSignIn(googleUser) {
+        // Useful data for your client-side scripts:
+        var profile = googleUser.getBasicProfile();
+        console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+        console.log('Full Name: ' + profile.getName());
+        console.log('Given Name: ' + profile.getGivenName());
+        console.log('Family Name: ' + profile.getFamilyName());
+        console.log("Image URL: " + profile.getImageUrl());
+        console.log("Email: " + profile.getEmail());
+
+        // The ID token you need to pass to your backend:
+        var id_token = googleUser.getAuthResponse().id_token;
+        console.log("ID Token: " + id_token);
+      };
     </script>
-</head>
-
-<body>
-    <!-- Add where you want your sign-in button to render -->
-    <!-- Use an image that follows the branding guidelines in a real app -->
-    <button id="signinButton">Sign in with Google</button>
-    <script>
-        $('#signinButton').click(function () {
-            // signInCallback defined in step 6.
-            auth2.grantOfflineAccess().then(signInCallback);
-        });
-
-        function signInCallback(authResult) {
-            if (authResult['code']) {
-
-                // Hide the sign-in button now that the user is authorized, for example:
-                $('#signinButton').attr('style', 'display: none');
-
-                // Send the code to the server
-                $.ajax({
-                    type: 'POST',
-                    url: 'http://localhost:3000/api/v1/users/google-auth',
-                    // Always include an `X-Requested-With` header in every AJAX request,
-                    // to protect against CSRF attacks.
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    contentType: 'application/octet-stream; charset=utf-8',
-                    success: function (result) {
-                        // Handle or verify the server response.
-                    },
-                    processData: false,
-                    data: authResult['code']
-                });
-            } else {
-                // There was an error.
-            }
-        }
-    </script>
-    <!-- ... -->
-</body>
-
+  </body>
 </html>
