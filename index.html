@@ -39,7 +39,7 @@
                 // Send the code to the server
                 $.ajax({
                     type: 'POST',
-                    url: 'http://example.com/storeauthcode',
+                    url: 'http://localhost:3000/api/v1/users/google-auth',
                     // Always include an `X-Requested-With` header in every AJAX request,
                     // to protect against CSRF attacks.
                     headers: {
